@@ -52,11 +52,12 @@ func DataMegaportVXCRead(d *schema.ResourceData, m interface{}) error {
 	d.Set("admin_locked", vxcDetails.AdminLocked)
 
 	aEndConfiguration := []interface{}{map[string]interface{}{
-		"port_id":   vxcDetails.AEndConfiguration.UID,
-		"owner_uid": vxcDetails.AEndConfiguration.OwnerUID,
-		"name":      vxcDetails.AEndConfiguration.Name,
-		"location":  vxcDetails.AEndConfiguration.Location,
-		"vlan":      vxcDetails.AEndConfiguration.VLAN,
+		"port_id":    vxcDetails.AEndConfiguration.UID,
+		"owner_uid":  vxcDetails.AEndConfiguration.OwnerUID,
+		"name":       vxcDetails.AEndConfiguration.Name,
+		"location":   vxcDetails.AEndConfiguration.Location,
+		"vlan":       vxcDetails.AEndConfiguration.VLAN,
+		"inner_vlan": vxcDetails.AEndConfiguration.InnerVLAN,
 	}}
 
 	if aEndErr := d.Set("a_end", aEndConfiguration); aEndErr != nil {
@@ -64,11 +65,12 @@ func DataMegaportVXCRead(d *schema.ResourceData, m interface{}) error {
 	}
 
 	bEndConfiguration := []interface{}{map[string]interface{}{
-		"port_id":   vxcDetails.BEndConfiguration.UID,
-		"owner_uid": vxcDetails.BEndConfiguration.OwnerUID,
-		"name":      vxcDetails.BEndConfiguration.Name,
-		"location":  vxcDetails.BEndConfiguration.Location,
-		"vlan":      vxcDetails.BEndConfiguration.VLAN,
+		"port_id":    vxcDetails.BEndConfiguration.UID,
+		"owner_uid":  vxcDetails.BEndConfiguration.OwnerUID,
+		"name":       vxcDetails.BEndConfiguration.Name,
+		"location":   vxcDetails.BEndConfiguration.Location,
+		"vlan":       vxcDetails.BEndConfiguration.VLAN,
+		"inner_vlan": vxcDetails.BEndConfiguration.InnerVLAN,
 	}}
 
 	if bEndErr := d.Set("b_end", bEndConfiguration); bEndErr != nil {

@@ -18,6 +18,7 @@ data "megaport_azure_connection" "azure_vxc" {
 - `uid` - The identifier of the Azure ExpressRoute connection.
 - `vxc_name` - The Azure ExpressRoute connection name.
 - `rate_limit` - The speed of the Azure ExpressRoute connection in Mbps.
+- `single_peering_vlan` - Peering VLAN to be delivered to A-End without QinQ. Matches b_end.inner_vlan.
 - `vxc_type` - The Azure ExpressRoute connection type.
 - `provisioning_status` - The current provisioning status of the Azure ExpressRoute connection (this status does not refer to availability).
 - `create_date` - A Unix timestamp representing the time the Azure ExpressRoute connection was created.
@@ -33,9 +34,11 @@ data "megaport_azure_connection" "azure_vxc" {
     - `name` - The name of the A-End resource.
     - `location` - The resource location name.
     - `assigned_vlan` - The VLAN assigned by Megaport to the A-End resource.
+    - `inner_vlan` - The QinQ C-Tag this VXC is delivered on at the A-End port.
 - `b_end`:
     - `port_id` - The resource id of the Azure ExpressRoute connection (B-End).
     - `owner_uid` - The owner id of the B-End resource for the Azure ExpressRoute connection.
     - `name` - The name of the B-End resource.
     - `location` - The resource location name.
     - `assigned_vlan` - The VLAN assigned by Megaport to the B-End resource.
+    - `inner_vlan` - The QinQ C-Tag this VXC is delivered on at the B-End port.

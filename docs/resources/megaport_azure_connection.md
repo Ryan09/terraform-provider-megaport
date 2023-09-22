@@ -46,6 +46,43 @@ resource "megaport_azure_connection" "azure_vxc" {
 }
 ```
 
+## Example Usage (Port with Single Peering VLAN)
+```
+data "megaport_location" "syd_gs" {
+  name = "Global Switch Sydney West"
+}
+
+resource "megaport_port" "port" {
+  port_name   = "Terraform Example - Port"
+  port_speed  = 1000
+  location_id = data.megaport_location.syd_gs.id
+}
+
+resource "megaport_azure_connection" "azure_vxc" {
+  vxc_name   = "Terraform Example - Azure VXC"
+  rate_limit = 200
+  single_peering_vlan = 100
+
+  a_end {
+    port_id        = megaport_port.port.id
+    requested_vlan = 50
+  }
+
+  csp_settings {
+    service_key = "1b2329a5-56dc-45d0-8a0d-87b706297777"
+
+    private_peering {
+      peer_asn         = "64555"
+      primary_subnet   = "10.0.0.0/30"
+      secondary_subnet = "10.0.0.4/30"
+      shared_key       = "SharedKey1"
+      requested_vlan   = 100
+    }
+
+  }
+}
+```
+
 ## Example Usage (MCR)
 ```
 data "megaport_location" "syd_gs" {
@@ -84,6 +121,7 @@ resource "megaport_azure_connection" "azure_vxc" {
 - `rate_limit` - (Required) The speed of the VXC in Mbps.
 - `a_end` - (Required) ** See VXC Documentation
 - `a_end_mcr_configuration` - (Optional) ** See VXC Documentation
+- `single_peering_vlan` - (Optional) Deliver this inner peering VLAN as A-End VLAN without QinQ
 - `csp_settings`:
     - `service_key` - (Required) The service key for the new ExpressRoute generated from your Azure subscription.
     - `auto_create_private_peering` - (Optional, default false) Creates Private peering with auto-generated values. Only works for MCR's, for Ports peering values must be supplied (see below).
@@ -125,3 +163,4 @@ resource "megaport_azure_connection" "azure_vxc" {
     - `name` - The name of the B-End port.
     - `location` - The location name for the B-End port.
     - `assigned_vlan` - The VLAN that was assigned by Megaport to the B-End port.
+    - `inner_vlan` - The QinQ C-Tag this VXC is delivered on at the B-End port.

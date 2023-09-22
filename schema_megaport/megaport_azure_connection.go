@@ -69,6 +69,12 @@ func ResourceAzureConnectionVXCSchema() map[string]*schema.Schema {
 			Optional: true,
 			Default:  "azure",
 		},
+		"single_peering_vlan": {
+			Type:     schema.TypeInt,
+			Optional: true,
+			Computed: true,
+			ForceNew: true,
+		},
 	}
 }
 

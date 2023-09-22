@@ -102,6 +102,12 @@ func ResourceVxcEndConfiguration() *schema.Schema {
 					Type:     schema.TypeInt,
 					Computed: true,
 				},
+				"inner_vlan": {
+					Type:     schema.TypeInt,
+					Computed: true,
+					Optional: true,
+					ForceNew: true,
+				},
 				"assigned_asn": {
 					Type:     schema.TypeInt,
 					Computed: true,
@@ -369,6 +375,10 @@ func DataVxcEndConfiguration() *schema.Schema {
 					Required: true,
 				},
 				"assigned_vlan": {
+					Type:     schema.TypeInt,
+					Computed: true,
+				},
+				"inner_vlan": {
 					Type:     schema.TypeInt,
 					Computed: true,
 				},

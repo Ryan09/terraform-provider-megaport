@@ -50,6 +50,7 @@ func resourceMegaportVXCCreate(d *schema.ResourceData, m interface{}) error {
 	bEndConfiguration := types.VXCOrderBEndConfiguration{
 		ProductUID: bEndSchemaMap["port_id"].(string),
 		VLAN:       bEndSchemaMap["requested_vlan"].(int),
+		InnerVLAN:  bEndSchemaMap["inner_vlan"].(int),
 	}
 
 	// make order
@@ -109,6 +110,7 @@ func ResourceMegaportVXCRead(d *schema.ResourceData, m interface{}) error {
 		"location":       vxcDetails.AEndConfiguration.Location,
 		"assigned_vlan":  vxcDetails.AEndConfiguration.VLAN,
 		"requested_vlan": requested_a_vlan,
+		"inner_vlan":     vxcDetails.AEndConfiguration.InnerVLAN,
 	}}
 
 	if aEndErr := d.Set("a_end", aEndConfiguration); aEndErr != nil {
@@ -122,6 +124,7 @@ func ResourceMegaportVXCRead(d *schema.ResourceData, m interface{}) error {
 		"location":       vxcDetails.BEndConfiguration.Location,
 		"assigned_vlan":  vxcDetails.AEndConfiguration.VLAN,
 		"requested_vlan": requested_b_vlan,
+		"inner_vlan":     vxcDetails.BEndConfiguration.InnerVLAN,
 	}}
 
 	if bEndErr := d.Set("b_end", bEndConfiguration); bEndErr != nil {
@@ -187,6 +190,9 @@ func ResourceMegaportVXCDelete(d *schema.ResourceData, m interface{}) error {
 }
 
 func ResourceMegaportVXCCreate_generate_AEnd(d *schema.ResourceData, m interface{}) (types.VXCOrderAEndConfiguration, string, error) {
+	logger := terraform_utility.NewMegaportLogger()
+	logger.Info("Generating A End")
+
 	// convert schema to map for param access
 	aEndSchemaMap := d.Get("a_end").(*schema.Set).List()[0].(map[string]interface{})
 
@@ -196,6 +202,14 @@ func ResourceMegaportVXCCreate_generate_AEnd(d *schema.ResourceData, m interface
 		aEndVlan = newVlan
 	}
 
+	logger.Info("Settings A End InnerVLAN")
+
+	// Inner vlan
+	aEndInnerVlan := 0
+	if newInnerVlan, v_ok := aEndSchemaMap["inner_vlan"].(int); v_ok {
+		aEndInnerVlan = newInnerVlan
+	}
+
 	// MCR configuration
 	interfaces := []types.PartnerConfigInterface{}
 	mcrInterface, _ := MarshallMcrAEndConfig(d, m)
@@ -203,7 +217,8 @@ func ResourceMegaportVXCCreate_generate_AEnd(d *schema.ResourceData, m interface
 	// Add interface if not empty
 	if reflect.DeepEqual(mcrInterface, types.PartnerConfigInterface{}) {
 		aEndConfiguration := types.VXCOrderAEndConfiguration{
-			VLAN: aEndVlan,
+			VLAN:      aEndVlan,
+			InnerVLAN: aEndInnerVlan,
 		}
 		return aEndConfiguration, aEndSchemaMap["port_id"].(string), nil
 	} else {
@@ -213,6 +228,7 @@ func ResourceMegaportVXCCreate_generate_AEnd(d *schema.ResourceData, m interface
 			PartnerConfig: types.VXCOrderAEndPartnerConfig{
 				Interfaces: interfaces,
 			},
+			InnerVLAN: aEndInnerVlan,
 		}
 		return aEndConfiguration, aEndSchemaMap["port_id"].(string), nil
 	}

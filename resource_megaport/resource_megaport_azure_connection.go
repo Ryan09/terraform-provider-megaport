@@ -99,6 +99,7 @@ func resourceMegaportAzureConnectionCreate(d *schema.ResourceData, m interface{}
 	bEndConfiguration := types.PartnerOrderBEndConfiguration{
 		PartnerPortID: partnerPortId,
 		PartnerConfig: partnerConfig,
+		InnerVLAN:     d.Get("single_peering_vlan").(int),
 	}
 
 	vxcId, buyErr := vxc.BuyPartnerVXC(
@@ -120,7 +121,14 @@ func resourceMegaportAzureConnectionCreate(d *schema.ResourceData, m interface{}
 }
 
 func resourceMegaportAzureConnectionRead(d *schema.ResourceData, m interface{}) error {
-	return ResourceMegaportVXCRead(d, m)
+	readResult := ResourceMegaportVXCRead(d, m)
+
+	bEndSchemaMap := d.Get("b_end").(*schema.Set).List()[0].(map[string]interface{})
+	if innerVlan, ok := bEndSchemaMap["inner_vlan"]; ok {
+		d.Set("single_peering_vlan", innerVlan)
+	}
+
+	return readResult
 }
 
 func resourceMegaportAzureConnectionUpdate(d *schema.ResourceData, m interface{}) error {

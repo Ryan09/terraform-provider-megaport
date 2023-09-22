@@ -30,12 +30,14 @@ data "megaport_vxc" "vxc" {
     - `name` - The A-End Port name.
     - `location` - The name of the data center where the Port is located.
     - `assigned_vlan` - The VLAN that Megaport assigned to the A-End Port.
+    - `inner_vlan` - The QinQ C-Tag this VXC is delivered on at the A-End port.
 - `b_end`:
     - `port_id` - The Port that the VXC B-End is attached to.
     - `owner_uid` - The identifier for the owner of the B-End Port.
     - `name` - The B-End Port name.
     - `location` - The name of the data center where the Port is located.
     - `assigned_vlan` - The VLAN that Megaport assigned to the B-End port.
+    - `inner_vlan` - The QinQ C-Tag this VXC is delivered on at the B-End port.
  
 
 ## Import

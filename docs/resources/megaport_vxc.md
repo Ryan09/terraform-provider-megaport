@@ -79,6 +79,7 @@ resource "megaport_vxc" "vxc" {
 - `a_end`:
     - `port_id` - (Required) The identifier of the product (Port/MCR) to attach the connection to.
     - `requested_vlan` - (Required) The VLAN to assign to the A-End Port.
+    - `inner_vlan` - (Optional) The QinQ C-Tag this VXC is delivered on at the A-End port.
 - `a_end_mcr_configuration` - (Optional) Configuration block for an A-End MCR if you wish to define a BGP Connection.
     - `ip_addresses` - (Optional) List of IP address and associated subnet mask to be configured on this interface.
     - `nat_ip_addresses` - (Optional) List of NAT IP address to be configured on this interface.
@@ -110,6 +111,7 @@ resource "megaport_vxc" "vxc" {
 - `b_end`:
     - `port_id` - (Required) The Port that the VXC B-End is attached to.
     - `requested_vlan` - (Required) The VLAN assign to the B-End port.
+    - `inner_vlan` - (Optional) The QinQ C-Tag this VXC is delivered on at the B-End port.
 
 ## Attributes Reference
 - `uid` - The Port identifier.
